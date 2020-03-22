@@ -1,6 +1,11 @@
 # web-scraping-python-
 web scraping to get statistics information about a profile in a forum 
 
+Requisitos:
+  - pip install python-datefutil
+  - pip install bs4
+  - pip install requests
+
 Para utilizar você deve:
   - Fazer seu login no site
   - Copiar o cookie e criar um arquivo chamado 'cookie.txt' e deixar na pasta do projeto
