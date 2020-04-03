@@ -18,7 +18,7 @@ respostas = re.findall(regex,str(pagina))
 dados = ' '.join(respostas)
 
 #retira numero de dias ou horas ou semanas ou meses
-regex = '([0-9]*) (horas?|dias?|semanas?|m)'
+regex = '([0-9]*) (minutos?|horas?|dias?|semanas?|m)'
 DHSM = re.findall(regex, dados)
 
 #retira datas no formato DD/MM/AAAA
@@ -29,7 +29,9 @@ data = re.findall(regex, dados)
 from dateutil.relativedelta import *
 data_registros = []
 for valor in DHSM:
-    if valor[1] == 'horas' or valor[1] == 'hora':
+    if valor[1] == 'minutos' or valor[1] == 'minuto':
+        data_registros.append((data_hora_atual - timedelta(minutes=int(valor[0]))).date().strftime("%d/%m/%Y"))
+    elif valor[1] == 'horas' or valor[1] == 'hora':
         data_registros.append((data_hora_atual - timedelta(hours=int(valor[0]))).date().strftime("%d/%m/%Y"))
     elif valor[1] == 'dias' or valor[1] == 'dia':
         data_registros.append((data_hora_atual - timedelta(days=int(valor[0]))).date().strftime("%d/%m/%Y"))
