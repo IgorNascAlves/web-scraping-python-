@@ -5,6 +5,7 @@ Requisitos:
   - pip install python-datefutil
   - pip install bs4
   - pip install requests
+  - pip install pandas
 
 Para utilizar você deve:
   - Fazer seu login no site
