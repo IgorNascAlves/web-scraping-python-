@@ -12,7 +12,7 @@ Para utilizar você deve:
   - Copiar o cookie e criar um arquivo chamado 'cookie.txt' e deixar na pasta do projeto
   - Rodar o programa 'principal.py' 
   - Fornecer seu nome de usuario como aparece na URL
-  - Rodar o programa 'pegar_informacoes.py'
+  - Exbira o numero de resposta da semana
   - Será gerado um arquivo teste.csv com as datas da suas respostas no forum
   
 Proximos passos:
