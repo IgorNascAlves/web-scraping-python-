@@ -27,7 +27,7 @@ def descobre_quantidade_respostas(today: dt.date):
     #dias = dias_antes + dias_depois 
     
     quantidade = 0
-    i = 0
+    #i = 0
     for dia in dias: print(dia.strftime('%d/%m/%Y'))
     
     for dia in dias:

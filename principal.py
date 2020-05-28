@@ -33,3 +33,6 @@ with requests.Session() as s:
         arq.writelines(str(data_atual))
         arq.writelines('\n')
         arq.writelines(str(r.content))
+
+import pegar_informacoes
+import calculos

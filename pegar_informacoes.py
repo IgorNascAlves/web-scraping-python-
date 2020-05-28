@@ -26,7 +26,7 @@ regex = '([0-9]{2}/[0-9]{2}/[0-9]{4})'
 data = re.findall(regex, dados)
 
 #criar lista de dados no formato DD/MM/AAAA
-from dateutil.relativedelta import *
+from dateutil.relativedelta import relativedelta
 data_registros = []
 for valor in DHSM:
     if valor[1] == 'minutos' or valor[1] == 'minuto':
