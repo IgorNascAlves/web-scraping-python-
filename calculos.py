@@ -1,5 +1,6 @@
 import pandas as pd
 import datetime as dt
+import matplotlib.pyplot as plt
 import re
 
 df = pd.read_csv('teste.csv', names = ['Date'], header=None, parse_dates=True, dayfirst=True, usecols=[0])
@@ -8,6 +9,9 @@ df = pd.read_csv('teste.csv', names = ['Date'], header=None, parse_dates=True, d
 
 def descobre_quantidade_respostas(today: dt.date):
     
+    eixo_x_grafico = []
+    eixo_y_grafico = []
+
     dia = today.day
 
     dia_da_semana = today.isoweekday()
@@ -28,10 +32,21 @@ def descobre_quantidade_respostas(today: dt.date):
     
     quantidade = 0
     #i = 0
-    for dia in dias: print(dia.strftime('%d/%m/%Y'))
+    for dia in dias: 
+        print(dia.strftime('%d/%m/%Y'))
+        eixo_x_grafico.append(dia.strftime('%d/%m'))
     
     for dia in dias:
         quantidade += len(df[(df.Date == dia.strftime('%d/%m/%Y'))])
+        respondeu_por_dia = len(df[(df.Date == dia.strftime('%d/%m/%Y'))])
+        eixo_y_grafico.append(respondeu_por_dia)
+    
+    plt.title('Quantidade de respostas por dias da semana')
+    plt.xlabel('Data')
+    plt.ylabel('Quantidade')
+    plt.bar(eixo_x_grafico, eixo_y_grafico, width= 0.5)
+    plt.savefig('calculo_das_minhas_repostas.png')
+    plt.show()
     
     return quantidade
 
