@@ -40,11 +40,13 @@ def descobre_quantidade_respostas(today: dt.date):
         quantidade += len(df[(df.Date == dia.strftime('%d/%m/%Y'))])
         respondeu_por_dia = len(df[(df.Date == dia.strftime('%d/%m/%Y'))])
         eixo_y_grafico.append(respondeu_por_dia)
-    
+
+    legenda = ['Total na semana: ' + str(quantidade)]
     plt.title('Quantidade de respostas por dias da semana')
     plt.xlabel('Data')
     plt.ylabel('Quantidade')
     plt.bar(eixo_x_grafico, eixo_y_grafico, width= 0.5)
+    plt.legend(legenda)
     plt.savefig('calculo_das_minhas_repostas.png')
     plt.show()
     
