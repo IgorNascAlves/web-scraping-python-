@@ -1,7 +1,10 @@
 #coding: utf-8
 #https://www.youtube.com/watch?time_continue=598&v=fmf_y8zpOgA&feature=emb_logo
 #https://imasters.com.br/back-end/como-fazer-web-scraping-com-python
-
+import sys
+for param in sys.argv :
+    user = param
+    
 import requests
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
@@ -18,7 +21,7 @@ with requests.Session() as s:
     headers['cookie'] = cookie    
     
     #receber nome do usuario
-    user = input("Nome do usuario: ")
+    #user = input("Nome do usuario: ")
     
     #faz req para site
     url = "https://cursos.alura.com.br/user/"+user+"/actions"
