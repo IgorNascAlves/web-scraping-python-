@@ -43,7 +43,10 @@ for valor in DHSM:
         print(valor)
 for valor in data:
     data_registros.append(valor)
-    
+
+if  not len(data_registros):
+    raise Exception("Atualizar o cookie")
+
 #salvar em arquivo csv
 with open('teste.csv','w') as arq:
     for data in data_registros:
