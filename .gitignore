@@ -1,5 +1,7 @@
-cookie.txt
-saida*
-teste*
 .vscode
 __pycache__
+*.txt
+*.csv
+*.html
+*.png
+.env
