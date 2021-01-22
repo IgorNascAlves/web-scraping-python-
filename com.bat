@@ -1,1 +1,0 @@
-python principal.py igor-nascimento-flipe

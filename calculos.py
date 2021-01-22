@@ -4,11 +4,14 @@ import matplotlib.pyplot as plt
 import re
 import pandas as pd
 import matplotlib.pyplot as plt
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
 #print(len(df))
 
 def descobre_quantidade_respostas(today: dt.date):
-    df = pd.read_csv('teste.csv', names = ['Date'], header=None, parse_dates=True, dayfirst=True, usecols=[0])
+    df = pd.read_csv('datas.csv', names = ['Date'], header=None, parse_dates=True, dayfirst=True, usecols=[0])
     eixo_x_grafico = []
     eixo_y_grafico = []
 
@@ -73,7 +76,7 @@ def rodar_calculos():
     print("Essa semana respondeu:",descobre_quantidade_respostas(data),sep=' ')
 
 def calculo_ano():
-    df = pd.read_csv("teste.csv", sep=',', header=None,
+    df = pd.read_csv("datas.csv", sep=',', header=None,
                     names=['Datas','sei la'], usecols=['Datas'],
                     parse_dates=[0], dayfirst=True)
     df = df[df.Datas.dt.strftime('%Y').str.contains("2020")]
@@ -164,7 +167,8 @@ def dados_api(user: str):
 
 def roda_api():
     import pandas as pd
-    with open("url.txt", "r") as f:
-        URL = f.read()
+    ##with open("url.txt", "r") as f:
+    ##    URL = f.read()
+    URL = os.getenv('URL')
     dados = pd.read_csv(URL)
     dados.to_csv('dados.csv', index=False)
