@@ -18,7 +18,6 @@ async def on_ready():
 async def on_guild_join(guild):
     general = discord.utils.find(lambda x: x.name == 'geral',  guild.text_channels)
     if general and general.permissions_for(guild.me).send_messages:
-        #await general.send('Olá Scuba Team, eu sou o IG-11 e estou aqui para **quantificar seus tópicos no fórum diariamente**. Me chame no privado com o seguinte comando:\n ```/semana seunomedeusuariodaalura```\nEspero por vocês!'.format(guild.name))
         await general.send('Olá Scuba Team, eu sou o IG-11 e estou aqui para **quantificar seus tópicos no fórum diariamente**. Me chame no privado com o seguinte comando:\n ```/semana seunomedeusuariodaalura```\nEspero por vocês!')
 
 @client.event
@@ -29,7 +28,7 @@ async def on_message(message):
 
         try:
           pegar_dados(usuario_alura)
-        except Exception:
+        except IndexError:
           print("Erro " + message.author.name) 
           await message.author.send(f'Vish {message.author.name} me perdi, chama o Igor :s')
         else:
@@ -60,15 +59,14 @@ async def on_message(message):
       print(message.author.name)
 
       await message.author.send('Atualizado')
-
-
+    
     if message.content.startswith('/lista_semana'):
         lista_users = message.content.split()[1:]
 
         for usuario_alura in lista_users:
           try:
             pegar_dados(usuario_alura)
-          except Exception:
+          except IndexError:
             print("Erro " + message.author.name) 
             await message.author.send(f'Vish {message.author.name} me perdi, chama o Igor :s')
           else:

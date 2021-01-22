@@ -1,7 +1,5 @@
 .vscode
 __pycache__
-*.txt
 *.csv
-*.html
 *.png
 .env
