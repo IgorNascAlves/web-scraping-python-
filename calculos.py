@@ -2,64 +2,49 @@ import pandas as pd
 import datetime as dt
 import matplotlib.pyplot as plt
 import re
-import pandas as pd
-import matplotlib.pyplot as plt
 import os
 from dotenv import load_dotenv
 load_dotenv()
 
-#print(len(df))
 
-def descobre_quantidade_respostas(today: dt.date):
-    df = pd.read_csv('datas.csv', names = ['Date'], header=None, parse_dates=True, dayfirst=True, usecols=[0])
+def descobre_quantidade_respostas(hoje: dt.date) -> int:
+    datas = pd.read_csv('datas.csv', names = ['Data'], header=None, parse_dates=['Data'], dayfirst=True, usecols=[0])
+    
+    dia_da_semana = hoje.isoweekday()
+    
+    if dia_da_semana == 7: dia_da_semana = 0
+    
+    dias = [hoje - dt.timedelta(num_dia) for num_dia in range(dia_da_semana,dia_da_semana-7,-1)]
+    
+    total_respostas_semana = len(datas.query('Data in @dias'))
+    desenha_grafico(dias, datas, total_respostas_semana)
+    
+    return total_respostas_semana
+
+def desenha_grafico(dias, datas, total_respostas_semana):
+    
     eixo_x_grafico = []
     eixo_y_grafico = []
 
-    dia = today.day
-
-    dia_da_semana = today.isoweekday()
-    
-    if dia_da_semana == 7: dia_da_semana = 0
-
-    #Dom Seg Ter Qua Qui Sex Sab
-    #000 001 002 003 004 005 006
-    #004 003 002 001 000 001 002
-    
-    dias = [today - dt.timedelta(i) for i in range(dia_da_semana,dia_da_semana-7,-1)]
-    #dias.pop(0)
-    #dias.pop(-1)
-    #dias_antes = [today - dt.timedelta(i) for i in range(7-dia_da-semana,-1,-1)]
-    
-    #dias_depois = [today + dt.timedelta(i) for i in range(dia_da_semana,6,1)]
-    
-    #dias = dias_antes + dias_depois 
-    
-    quantidade = 0
-    #i = 0
-    for dia in dias: 
-        #print(dia.strftime('%d/%m/%Y'))
-        eixo_x_grafico.append(dia.strftime('%d/%m'))
-    
     for dia in dias:
-        quantidade += len(df[(df.Date == dia.strftime('%d/%m/%Y'))])
-        respondeu_por_dia = len(df[(df.Date == dia.strftime('%d/%m/%Y'))])
+        eixo_x_grafico.append(dia.strftime('%d/%m'))
+        respondeu_por_dia = len(datas.query('Data == @dia'))
         eixo_y_grafico.append(respondeu_por_dia)
     
     fig, ax = plt.subplots()
-    legenda = ['Total na semana: ' + str(quantidade)]
     plt.title('Quantidade de respostas por dias da semana')
-    plt.xlabel('Data')
-    plt.ylabel('Quantidade')
-    rects1 = plt.bar(eixo_x_grafico, eixo_y_grafico, width= 0.5)    
+    plt.bar(eixo_x_grafico, eixo_y_grafico, width= 0.5, color='#167bf7')    
     plt.yticks(range(0,21,5))
-    plt.legend(legenda)
-    autolabel(rects1, ax)
+    plt.legend([f'Total na semana: {total_respostas_semana}'])
+
+    for i, valor in enumerate(eixo_y_grafico):
+        if valor > 0:
+            color = 'green' if valor > 5 else 'red'
+            ax.text(x=i, y=valor+.5, s=str(valor), ha='center', color=color)
+        
     fig.tight_layout()
     plt.savefig('calculo_das_minhas_repostas.png')
     plt.clf()
-    # plt.show()
-    
-    return quantidade
 
 def rodar_calculos():
     data = input("Diga a data(dd/mm/yyyy) e eu te digo a quantidade de resposta desssa semana:")
@@ -104,9 +89,9 @@ def autolabel(rects, ax):
         height = rect.get_height()
         ax.annotate('{}'.format(height),
                     xy=(rect.get_x() + rect.get_width() / 2, height),
-                    xytext=(0, 3),  # 3 points vertical offset
-                    textcoords="offset points",
-                    ha='center', va='bottom')
+                        xytext=(0, 3),  # 3 points vertical offset
+                        textcoords="offset points",
+                        ha='center', va='bottom')
 
 def descobre_quantidade_respostas_passada(today: dt.date, user: str):
     dados_api(user)
