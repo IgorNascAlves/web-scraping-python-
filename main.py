@@ -7,7 +7,7 @@ load_dotenv()
 from online import keep_alive
 
 from scraping import pegar_dados, atualiza_cookie
-from calculos import descobre_quantidade_respostas, descobre_quantidade_respostas_passada, roda_api
+from calculos import descobre_quantidade_respostas, roda_api, dados_api
 
 client = discord.Client()
 @client.event
@@ -32,8 +32,9 @@ async def on_message(message):
           print("Erro " + message.author.name) 
           await message.author.send(f'Vish {message.author.name} me perdi, chama o Igor :s')
         else:
+          #data = (dt.datetime.now() - dt.timedelta(hours=3)).date()
           data = dt.datetime.now().date()        
-          _ = descobre_quantidade_respostas(data)
+          _ = descobre_quantidade_respostas(data, 'semana_atual')
           await message.author.send(f'Olá {message.author.name}!', file=discord.File('calculo_das_minhas_repostas.png'))
 
         print(message.author.name)        
@@ -42,14 +43,18 @@ async def on_message(message):
 
     if message.content.startswith('/passada'):
         roda_api()
+        
         _, usuario_alura = message.content.split()
 
+        dados_api(usuario_alura)
+
+        #data = (dt.datetime.now() - dt.timedelta(days=7, hours=3)).date()
         data = dt.datetime.now().date() - dt.timedelta(days=7)
-        _ = descobre_quantidade_respostas_passada(data, usuario_alura)
+        _ = descobre_quantidade_respostas(data, 'semana_passada')
 
         print(message.author.name)
 
-        await message.author.send(f'Olá {message.author.name}!', file=discord.File('calculo_das_minhas_repostas_passada.png'))
+        await message.author.send(f'Olá {message.author.name}!', file=discord.File('calculo_das_minhas_repostas.png'))
 
     if message.content.startswith('/cookie'):
       _, novo_cookie = message.content.split()
@@ -71,7 +76,7 @@ async def on_message(message):
             await message.author.send(f'Vish {message.author.name} me perdi, chama o Igor :s')
           else:
             data = dt.datetime.now().date()        
-            _ = descobre_quantidade_respostas(data)
+            _ = descobre_quantidade_respostas(data, 'semana_atual')
             await message.author.send(f'Semana atual de {usuario_alura}:', file=discord.File('calculo_das_minhas_repostas.png'))
 
         print(message.author.name)     
@@ -83,9 +88,9 @@ async def on_message(message):
         data = dt.datetime.now().date() - dt.timedelta(days=7)
 
         for usuario_alura in lista_users:
-          _ = descobre_quantidade_respostas_passada(data, usuario_alura)
-
-          await message.author.send(f'Semana passada de {usuario_alura}:', file=discord.File('calculo_das_minhas_repostas_passada.png'))
+          dados_api(usuario_alura)
+          _ = descobre_quantidade_respostas(data, 'semana_passada')
+          await message.author.send(f'Semana passada de {usuario_alura}:', file=discord.File('calculo_das_minhas_repostas.png'))
 
 TOKEN = os.getenv('TOKEN_DISCORD')
 keep_alive()

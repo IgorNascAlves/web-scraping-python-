@@ -55,7 +55,7 @@ def pegar_informacoes(pagina: bytes) -> None:
 
     with open('datas.csv','w') as arq:
         for data in data_registros:
-            arq.writelines(str(data)+",\n")
+            arq.writelines(str(data)+"\n")
 
 def formatar_horario(data_registros: list, data_hora_atual: datetime, escala: str, valor: str) -> None:
     data_registros.append((data_hora_atual - relativedelta(**{escala: int(valor)})).date().strftime("%d/%m/%Y"))
