@@ -53,7 +53,7 @@ def pegar_informacoes(pagina: bytes) -> None:
     if  not len(data_registros):
         raise IndexError("Registro de datas vazio, atualizar o cookie")
 
-    with open('datas.csv','w') as arq:
+    with open('csv/datas_gerais_por_usuario.csv','w') as arq:
         for data in data_registros:
             arq.writelines(str(data)+"\n")
 
