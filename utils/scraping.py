@@ -12,7 +12,7 @@ def executar_requisicao(user: str) -> bytes:
 
     with requests.Session() as sessao:
 
-        headers: dict = {'cookie': f"__cfduid=; caelum.login.token={os.getenv('COOKIE')}; alura.userId={os.getenv('USER_ID')};"}   
+        headers: dict = {'cookie': f"__cfduid=; caelum.login.token={pegar_cookie()}; alura.userId={os.getenv('USER_ID')};"}   
         url: str = f"https://cursos.alura.com.br/user/{user}/actions"
         resposta: requests.models.Response = sessao.get(url, headers=headers)
 
@@ -66,3 +66,10 @@ def pegar_dados(user: str) -> None:
 
 def atualiza_cookie(novo_cookie: str) -> None:    
     os.environ["COOKIE"] = novo_cookie
+    with open('txt/COOKIE.txt','w') as arq:
+       arq.write(novo_cookie)
+
+def pegar_cookie() -> str:    
+    with open('txt/COOKIE.txt','r') as arq:
+       cookie = arq.readline()
+    return cookie

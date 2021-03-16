@@ -1,0 +1,7 @@
+discord==1.0.1
+Flask==1.1.2
+matplotlib==3.3.4
+pandas==1.1.5
+python-dateutil==2.8.1
+python-dotenv==0.15.0
+requests==2.25.1

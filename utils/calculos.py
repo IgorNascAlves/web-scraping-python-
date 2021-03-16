@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-def descobre_quantidade_respostas(hoje: dt.date, tempo: str) -> int:
+def descobre_quantidade_respostas(hoje: dt.date, tempo: str) -> None:
 
     datas = pd.read_csv('csv/datas_gerais_por_usuario.csv', names = ['Data'], header=None, parse_dates=['Data'], dayfirst=True)
     
@@ -21,8 +21,6 @@ def descobre_quantidade_respostas(hoje: dt.date, tempo: str) -> int:
     total_respostas_semana = len(datas.query('Data in @dias'))
 
     desenha_grafico(dias, datas, total_respostas_semana,f'Quantidade de respostas por dias da semana {tempo}', f'respostas_semana_{tempo}')
-    
-    return total_respostas_semana
 
 def desenha_grafico(dias: list, datas: pd.DataFrame, total_respostas_semana: int, titulo_grafico: str, nome_imagem: str) -> None:
     
@@ -50,6 +48,7 @@ def desenha_grafico(dias: list, datas: pd.DataFrame, total_respostas_semana: int
     plt.clf() # limpa figura
 
 def dados_api(usuario: str) -> None:
+    roda_api()
     dados = pd.read_csv('csv/dados_gerais_api.csv', parse_dates=[3], dayfirst=True).query('username == @usuario')[['creationDate']]
     dados['data'] = dados.creationDate.dt.strftime("%d/%m/%Y")
     dados[['data']].to_csv('csv/datas_gerais_por_usuario.csv', index=False, header=False)

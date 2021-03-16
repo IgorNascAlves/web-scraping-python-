@@ -4,93 +4,45 @@ import datetime as dt
 from dotenv import load_dotenv
 
 from online import keep_alive
-from scraping import pegar_dados, atualiza_cookie
-from calculos import descobre_quantidade_respostas, roda_api, dados_api
-
+from utils.scraping import pegar_dados, atualiza_cookie
+from utils.calculos import descobre_quantidade_respostas, roda_api, dados_api
+from utils.comandos import semana_atual, semana_passada, cookie, lista_semana, lista_passada
 
 load_dotenv()
 
 client = discord.Client()
+
 @client.event
 async def on_ready():
     print('Bot Online!')
 
 @client.event
 async def on_guild_join(guild):
-    general = discord.utils.find(lambda x: x.name == 'geral',  guild.text_channels)
+    """
+    Essa função é executada quando o bot é adcionado a um servidor, ela procura pelo canal geral e faz a apresentação do bot.
+    """
+    general = discord.utils.find(lambda canal: canal.name == 'geral',  guild.text_channels)
     if general and general.permissions_for(guild.me).send_messages:
         await general.send('Olá Scuba Team, eu sou o IG-11 e estou aqui para **quantificar seus tópicos no fórum diariamente**. Me chame no privado com o seguinte comando:\n ```/semana seunomedeusuariodaalura```\nEspero por vocês!')
 
 @client.event
 async def on_message(message):
-
-    if message.content.startswith('/semana'):
-        _, usuario_alura = message.content.split()
-        tempo = 'atual'
-        try:
-          pegar_dados(usuario_alura)
-        except IndexError:
-          print("Erro " + message.author.name) 
-          await message.author.send(f'Vish {message.author.name} me perdi, chama o Igor :s')
-        else:
-          #data = (dt.datetime.now() - dt.timedelta(hours=3)).date()
-          data = dt.datetime.now().date()        
-          _ = descobre_quantidade_respostas(data, tempo)
-          await message.author.send(f'Olá {message.author.name}!', file=discord.File(f'img/respostas_semana_{tempo}.png'))
-
-        print(message.author.name)        
-
-        # await message.channel.send(f'Hello {message.author}! - Bot em Python', file=discord.File('gráfico_teste.png')) # enviar no canal
-
-    if message.content.startswith('/passada'):
-        roda_api()        
-        _, usuario_alura = message.content.split()
-        dados_api(usuario_alura)
-        tempo = 'passada'
-
-        #data = (dt.datetime.now() - dt.timedelta(days=7, hours=3)).date()
-        data = dt.datetime.now().date() - dt.timedelta(days=7)
-        _ = descobre_quantidade_respostas(data, tempo)
-
-        print(message.author.name)
-
-        await message.author.send(f'Olá {message.author.name}!', file=discord.File(f'img/respostas_semana_{tempo}.png'))
-
-    if message.content.startswith('/cookie'):
-      _, novo_cookie = message.content.split()
-
-      atualiza_cookie(novo_cookie)
-
+    """
+    Essa função é executada quando recebe uma mensagem.
+    """
+    
+    if message.content.startswith('/'):
+      comando, valor = message.content.split() # comando
       print(message.author.name)
 
-      await message.author.send('Atualizado')
-    
-    if message.content.startswith('/lista_semana'):
-        lista_users = message.content.split()[1:]
-        tempo = 'atual'
-        for usuario_alura in lista_users:
-          try:
-            pegar_dados(usuario_alura)
-          except IndexError:
-            print("Erro " + message.author.name) 
-            await message.author.send(f'Vish {message.author.name} me perdi, chama o Igor :s')
-          else:
-            data = dt.datetime.now().date()        
-            _ = descobre_quantidade_respostas(data, tempo)
-            await message.author.send(f'Semana atual de {usuario_alura}:', file=discord.File(f'img/respostas_semana_{tempo}.png'))
+      dicionario = {'/semana': semana_atual,
+                    '/passada': semana_passada,
+                    '/cookie': cookie,
+                    '/lista_semana': lista_semana,
+                    '/lista_passada': lista_passada
+                    }
 
-        print(message.author.name)     
-
-    if message.content.startswith('/lista_passada'):
-        roda_api()
-        lista_users = message.content.split()[1:]
-        tempo = 'passada'
-        data = dt.datetime.now().date() - dt.timedelta(days=7)
-
-        for usuario_alura in lista_users:
-          dados_api(usuario_alura)
-          _ = descobre_quantidade_respostas(data, tempo)
-          await message.author.send(f'Semana passada de {usuario_alura}:', file=discord.File(f'img/respostas_semana_{tempo}.png'))
+      await dicionario[comando](message, valor)
 
 TOKEN = os.getenv('TOKEN_DISCORD')
 keep_alive()
