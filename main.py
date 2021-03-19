@@ -4,9 +4,8 @@ import datetime as dt
 from dotenv import load_dotenv
 
 from online import keep_alive
-from utils.scraping import pegar_dados, atualiza_cookie
-from utils.calculos import descobre_quantidade_respostas, roda_api, dados_api
-from utils.comandos import semana_atual, semana_passada, cookie, lista_semana, lista_passada
+from utils.comandos import semana_atual, semana_passada, cookie, lista_semana, lista_passada, ranking_acessos
+from utils.util import registra_historico
 
 load_dotenv()
 
@@ -32,17 +31,18 @@ async def on_message(message):
     """
     
     if message.content.startswith('/'):
-      comando, valor = message.content.split() # comando
-      print(message.author.name)
+        comando, valor = message.content.split() # comando
+        registra_historico(message, valor, comando)
 
-      dicionario = {'/semana': semana_atual,
+        dicionario = {'/semana': semana_atual,
                     '/passada': semana_passada,
                     '/cookie': cookie,
                     '/lista_semana': lista_semana,
-                    '/lista_passada': lista_passada
+                    '/lista_passada': lista_passada,
+                    '/top': ranking_acessos
                     }
-
-      await dicionario[comando](message, valor)
+        
+        await dicionario[comando](message, valor)
 
 TOKEN = os.getenv('TOKEN_DISCORD')
 keep_alive()

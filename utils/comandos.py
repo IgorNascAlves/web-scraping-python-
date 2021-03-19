@@ -40,7 +40,7 @@ async def lista_semana(message, nome_time):
         try:
             pegar_dados(usuario_alura)
         except IndexError:
-            print("Erro " + message.author.name) 
+            print(f"Erro {message.author.name} User:{usuario_alura}") 
             await message.author.send(f'Vish {message.author.name} me perdi, chama o Igor :s')
         else:
             data = dt.datetime.now().date()        
@@ -57,3 +57,8 @@ async def lista_passada(message, nome_time):
         dados_api(usuario_alura)
         descobre_quantidade_respostas(data, tempo)
         await message.author.send(f'Semana passada de {usuario_alura}:', file=discord.File(f'img/respostas_semana_{tempo}.png'))
+
+async def ranking_acessos(message, qtd):
+    registros = pd.read_csv('csv/historico_uso.csv')
+    lista_top = registros.Nome.value_counts()[:int(qtd)]
+    await message.author.send(f"Histórico de uso - TOP {qtd}:\n\n{lista_top.to_string()}")
